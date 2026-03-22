@@ -4,122 +4,837 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Império do Cuscuz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --amarelo: #F5A623;
+      --vermelho: #C0392B;
+      --marrom: #3E1F00;
+      --creme: #FDF3E3;
+      --bege: #F0DEB4;
+      --branco: #FFFDF7;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: Georgia, serif;
-      background: #fdf3e3;
-      color: #3b2a1a;
+      font-family: 'Lato', sans-serif;
+      background: var(--creme);
+      color: var(--marrom);
+      overflow-x: hidden;
     }
 
-    header {
-      background: #c0392b;
-      color: white;
+    /* ── HERO ── */
+    .hero {
+      background: var(--marrom);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
       padding: 40px 20px;
+      position: relative;
+      overflow: hidden;
     }
 
-    header h1 {
-      font-size: 3em;
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 40%, rgba(245,166,35,0.18) 0%, transparent 70%),
+                  radial-gradient(ellipse at 20% 80%, rgba(192,57,43,0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .grain {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    .hero-badge {
+      background: var(--amarelo);
+      color: var(--marrom);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 2px;
+      margin-bottom: 28px;
+      display: inline-block;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 9vw, 7rem);
+      font-weight: 900;
+      color: var(--branco);
+      line-height: 1;
+      letter-spacing: -2px;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+
+    .hero h1 span {
+      color: var(--amarelo);
+      font-style: italic;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: rgba(255,253,247,0.7);
+      margin-top: 20px;
+      font-weight: 300;
+      letter-spacing: 1px;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .hero-cta {
+      margin-top: 40px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+
+    .btn-primary {
+      background: var(--amarelo);
+      color: var(--marrom);
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 16px 36px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(245,166,35,0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--branco);
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 16px 36px;
+      border: 2px solid rgba(255,253,247,0.4);
+      border-radius: 3px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--amarelo);
+      background: rgba(245,166,35,0.1);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,253,247,0.4);
+      font-size: 0.75rem;
       letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
     }
 
-    header p {
-      font-size: 1.2em;
-      margin-top: 10px;
-      opacity: 0.9;
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--marrom);
+      border-bottom: 2px solid var(--amarelo);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
     }
 
-    main {
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 0 20px;
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      color: var(--amarelo);
+      font-size: 1.2rem;
+      text-decoration: none;
     }
 
-    h2 {
-      color: #c0392b;
-      border-bottom: 2px solid #c0392b;
-      padding-bottom: 8px;
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255,253,247,0.7);
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 700;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--amarelo); }
+
+    /* ── SEÇÃO TÍTULO ── */
+    .section-header {
+      text-align: center;
+      padding: 80px 20px 48px;
+    }
+
+    .section-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--vermelho);
+      margin-bottom: 16px;
+    }
+
+    .section-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      color: var(--marrom);
+      line-height: 1.1;
+    }
+
+    .section-header p {
+      margin-top: 16px;
+      color: #7a5c3a;
+      font-size: 1.05rem;
+      font-weight: 300;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: var(--amarelo);
+      margin: 20px auto 0;
+      border-radius: 2px;
+    }
+
+    /* ── GUMER GRID ── */
+    #gumer {
+      background: var(--branco);
+      padding-bottom: 80px;
+    }
+
+    .gumer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 28px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .gumer-card {
+      background: var(--creme);
+      border: 1.5px solid var(--bege);
+      border-radius: 6px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+
+    .gumer-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(62,31,0,0.13);
+    }
+
+    .card-img {
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      position: relative;
+    }
+
+    .card-img.tipo1 { background: linear-gradient(135deg, #F5A623 0%, #E8872A 100%); }
+    .card-img.tipo2 { background: linear-gradient(135deg, #C0392B 0%, #96281B 100%); }
+    .card-img.tipo3 { background: linear-gradient(135deg, #8B6914 0%, #6B4F10 100%); }
+    .card-img.tipo4 { background: linear-gradient(135deg, #27AE60 0%, #1E8449 100%); }
+
+    .card-tag {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(255,253,247,0.9);
+      color: var(--marrom);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+
+    .card-body {
+      padding: 24px;
+    }
+
+    .card-body h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--marrom);
+      margin-bottom: 8px;
+    }
+
+    .card-body p {
+      font-size: 0.9rem;
+      color: #7a5c3a;
+      line-height: 1.7;
       margin-bottom: 20px;
     }
 
-    .sobre {
-      font-size: 1.1em;
-      line-height: 1.9;
-      margin-bottom: 40px;
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-top: 1px solid var(--bege);
+      background: var(--branco);
     }
 
-    .cardapio {
+    .preco {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--vermelho);
+    }
+
+    .preco span {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.8rem;
+      color: #7a5c3a;
+      font-weight: 400;
+      display: block;
+    }
+
+    .btn-pedir {
+      background: var(--marrom);
+      color: var(--amarelo);
+      border: none;
+      padding: 10px 20px;
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-pedir:hover {
+      background: var(--vermelho);
+      transform: scale(1.05);
+    }
+
+    /* ── POTE ── */
+    #pote {
+      background: var(--marrom);
+      padding-bottom: 80px;
+    }
+
+    #pote .section-header h2 { color: var(--branco); }
+    #pote .section-tag { color: var(--amarelo); }
+    #pote .section-header p { color: rgba(255,253,247,0.6); }
+
+    .pote-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-bottom: 40px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
     }
 
-    .item {
-      background: white;
-      border-radius: 10px;
-      padding: 20px;
+    .pote-card {
+      background: rgba(255,253,247,0.05);
+      border: 1.5px solid rgba(245,166,35,0.25);
+      border-radius: 6px;
+      padding: 32px;
+      transition: background 0.3s, border-color 0.3s, transform 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pote-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--amarelo);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+
+    .pote-card:hover {
+      background: rgba(255,253,247,0.08);
+      border-color: var(--amarelo);
+      transform: translateY(-4px);
+    }
+
+    .pote-card:hover::before { transform: scaleX(1); }
+
+    .pote-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    .pote-ml {
+      display: inline-block;
+      background: var(--amarelo);
+      color: var(--marrom);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 2px;
+      margin-bottom: 16px;
+    }
+
+    .pote-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--branco);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .pote-card p {
+      color: rgba(255,253,247,0.6);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .pote-ingredientes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .ingrediente {
+      background: rgba(245,166,35,0.15);
+      color: var(--amarelo);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 2px;
+      border: 1px solid rgba(245,166,35,0.3);
+    }
+
+    .pote-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 20px;
+      border-top: 1px solid rgba(245,166,35,0.2);
+    }
+
+    .pote-preco {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--amarelo);
+    }
+
+    .pote-preco span {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.75rem;
+      color: rgba(255,253,247,0.4);
+      font-weight: 400;
+      display: block;
+    }
+
+    .btn-pedir-pote {
+      background: var(--amarelo);
+      color: var(--marrom);
+      border: none;
+      padding: 10px 20px;
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-pedir-pote:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 24px rgba(245,166,35,0.4);
+    }
+
+    /* ── DIFERENCIAIS ── */
+    #diferenciais {
+      background: var(--bege);
+      padding: 80px 24px;
+    }
+
+    .diferenciais-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .diferencial {
       text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    .item h3 { color: #c0392b; margin-bottom: 8px; }
-    .item p  { font-size: 0.95em; color: #666; }
+    .diferencial-icon {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+    }
 
+    .diferencial h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--marrom);
+      margin-bottom: 8px;
+    }
+
+    .diferencial p {
+      font-size: 0.88rem;
+      color: #7a5c3a;
+      line-height: 1.7;
+    }
+
+    /* ── FOOTER ── */
     footer {
-      background: #3b2a1a;
-      color: #fdf3e3;
+      background: #1a0d00;
+      color: rgba(255,253,247,0.5);
       text-align: center;
-      padding: 20px;
-      font-size: 0.9em;
+      padding: 48px 24px;
+    }
+
+    footer .logo-footer {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--amarelo);
+      margin-bottom: 12px;
+    }
+
+    footer p {
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+
+    .whatsapp-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #25D366;
+      color: white;
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border-radius: 3px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .whatsapp-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37,211,102,0.4);
+    }
+
+    .footer-copy {
+      margin-top: 40px;
+      font-size: 0.75rem;
+      opacity: 0.4;
+    }
+
+    /* ── ANIMAÇÕES ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(8px); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Império do Cuscuz</h1>
-    <p>O sabor do Nordeste na sua mesa</p>
-  </header>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="grain"></div>
+    <div class="hero-badge">Nordeste de Verdade</div>
+    <h1>Império do<br><span>Cuscuz</span></h1>
+    <p class="hero-sub">Artesanal · Fresquinho · Entregamos na sua porta</p>
+    <div class="hero-cta">
+      <a href="#gumer" class="btn-primary">Ver Cuscuz Gumer</a>
+      <a href="#pote" class="btn-outline">Cuscuz no Pote</a>
+    </div>
+    <div class="scroll-hint">▼ &nbsp; role para baixo</div>
+  </section>
 
-  <main>
-    <section>
-      <h2>Quem somos</h2>
-      <p class="sobre">
-        O Império do Cuscuz nasceu do amor pela culinária nordestina.
-        Aqui você encontra o verdadeiro cuscuz artesanal, feito com
-        carinho e os melhores ingredientes da nossa terra.
-      </p>
-    </section>
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">Império do Cuscuz</a>
+    <ul class="nav-links">
+      <li><a href="#gumer">Gumer</a></li>
+      <li><a href="#pote">No Pote</a></li>
+      <li><a href="#diferenciais">Sobre nós</a></li>
+    </ul>
+  </nav>
 
-    <section>
-      <h2>Nosso cardápio</h2>
-      <div class="cardapio">
-        <div class="item">
-          <h3>Cuscuz Simples</h3>
-          <p>Cuscuz de milho no ponto certo, puro e gostoso.</p>
+  <!-- CUSCUZ GUMER -->
+  <section id="gumer">
+    <div class="section-header">
+      <span class="section-tag">Especialidade da casa</span>
+      <h2>Cuscuz Gumer</h2>
+      <p>Quatro sabores irresistíveis, feitos na hora com os melhores ingredientes do Nordeste.</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="gumer-grid">
+
+      <div class="gumer-card reveal">
+        <div class="card-img tipo1">
+          🌽
+          <span class="card-tag">Clássico</span>
         </div>
-        <div class="item">
-          <h3>Cuscuz com Ovo</h3>
-          <p>Acompanhado de ovo estrelado ou mexido.</p>
+        <div class="card-body">
+          <h3>Gumer Tradicional</h3>
+          <p>O clássico do Nordeste. Cuscuz de milho no ponto certo, acompanhado de manteiga de garrafa e queijo coalho artesanal.</p>
         </div>
-        <div class="item">
-          <h3>Cuscuz Completo</h3>
-          <p>Com carne de sol, queijo coalho e manteiga.</p>
-        </div>
-        <div class="item">
-          <h3>Cuscuz Doce</h3>
-          <p>Com leite condensado e coco ralado.</p>
+        <div class="card-footer">
+          <div class="preco">R$ 18<span>por porção</span></div>
+          <a href="https://wa.me/55" class="btn-pedir">Pedir agora</a>
         </div>
       </div>
-    </section>
-  </main>
 
+      <div class="gumer-card reveal">
+        <div class="card-img tipo2">
+          🥩
+          <span class="card-tag">Nordestino</span>
+        </div>
+        <div class="card-body">
+          <h3>Gumer Carne de Sol</h3>
+          <p>Carne de sol desfiada, refogada com alho, cebola e pimenta, servida sobre cuscuz quentinho com queijo derretido.</p>
+        </div>
+        <div class="card-footer">
+          <div class="preco">R$ 24<span>por porção</span></div>
+          <a href="https://wa.me/55" class="btn-pedir">Pedir agora</a>
+        </div>
+      </div>
+
+      <div class="gumer-card reveal">
+        <div class="card-img tipo3">
+          🍳
+          <span class="card-tag">Café da manhã</span>
+        </div>
+        <div class="card-body">
+          <h3>Gumer com Ovo</h3>
+          <p>Cuscuz quentinho com ovo caipira mexido, manteiga de garrafa e queijo. O café da manhã perfeito do Nordeste.</p>
+        </div>
+        <div class="card-footer">
+          <div class="preco">R$ 16<span>por porção</span></div>
+          <a href="https://wa.me/55" class="btn-pedir">Pedir agora</a>
+        </div>
+      </div>
+
+      <div class="gumer-card reveal">
+        <div class="card-img tipo4">
+          🌿
+          <span class="card-tag">Especial</span>
+        </div>
+        <div class="card-body">
+          <h3>Gumer Completo</h3>
+          <p>A combinação perfeita: carne de sol, ovo, queijo coalho, manteiga de garrafa e pimenta artesanal. Tudo de uma vez!</p>
+        </div>
+        <div class="card-footer">
+          <div class="preco">R$ 28<span>por porção</span></div>
+          <a href="https://wa.me/55" class="btn-pedir">Pedir agora</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CUSCUZ NO POTE -->
+  <section id="pote">
+    <div class="section-header">
+      <span class="section-tag">Novidade</span>
+      <h2>Cuscuz no Pote</h2>
+      <p>350ml de sabor nordestino. Prático, gostoso e perfeito para levar a qualquer lugar.</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="pote-grid">
+
+      <div class="pote-card reveal">
+        <div class="pote-icon">🥩</div>
+        <span class="pote-ml">350ml</span>
+        <h3>Cuscuz de Carne Seca com Banana</h3>
+        <p>Uma combinação inusitada e viciante: carne seca desfiada com banana-da-terra caramelizada sobre cuscuz cremoso.</p>
+        <div class="pote-ingredientes">
+          <span class="ingrediente">Carne seca</span>
+          <span class="ingrediente">Banana-da-terra</span>
+          <span class="ingrediente">Cuscuz de milho</span>
+          <span class="ingrediente">Manteiga</span>
+        </div>
+        <div class="pote-footer">
+          <div class="pote-preco">R$ 22<span>pote 350ml</span></div>
+          <a href="https://wa.me/55" class="btn-pedir-pote">Pedir</a>
+        </div>
+      </div>
+
+      <div class="pote-card reveal">
+        <div class="pote-icon">🌿</div>
+        <span class="pote-ml">350ml</span>
+        <h3>Cuscuz de Carne do Sol com Vinagrete</h3>
+        <p>Carne do sol desfiada com vinagrete fresquinho de tomate, cebola e coentro. Refrescante e cheio de sabor.</p>
+        <div class="pote-ingredientes">
+          <span class="ingrediente">Carne do sol</span>
+          <span class="ingrediente">Tomate</span>
+          <span class="ingrediente">Cebola</span>
+          <span class="ingrediente">Coentro</span>
+        </div>
+        <div class="pote-footer">
+          <div class="pote-preco">R$ 22<span>pote 350ml</span></div>
+          <a href="https://wa.me/55" class="btn-pedir-pote">Pedir</a>
+        </div>
+      </div>
+
+      <div class="pote-card reveal">
+        <div class="pote-icon">🌶️</div>
+        <span class="pote-ml">350ml</span>
+        <h3>Cuscuz de Calabresa</h3>
+        <p>Calabresa artesanal fatiada e refogada com alho, pimenta e azeite, sobre cuscuz temperado. Para quem gosta de sabor intenso.</p>
+        <div class="pote-ingredientes">
+          <span class="ingrediente">Calabresa artesanal</span>
+          <span class="ingrediente">Alho</span>
+          <span class="ingrediente">Pimenta</span>
+          <span class="ingrediente">Azeite</span>
+        </div>
+        <div class="pote-footer">
+          <div class="pote-preco">R$ 20<span>pote 350ml</span></div>
+          <a href="https://wa.me/55" class="btn-pedir-pote">Pedir</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DIFERENCIAIS -->
+  <section id="diferenciais">
+    <div class="section-header">
+      <span class="section-tag">Por que a gente?</span>
+      <h2>Feito com amor nordestino</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="diferenciais-grid">
+      <div class="diferencial reveal">
+        <div class="diferencial-icon">🌽</div>
+        <h4>100% Artesanal</h4>
+        <p>Produzido diariamente com farinha de milho selecionada, sem conservantes.</p>
+      </div>
+      <div class="diferencial reveal">
+        <div class="diferencial-icon">🚀</div>
+        <h4>Entrega Rápida</h4>
+        <p>Saiu quentinho da nossa cozinha direto para a sua porta.</p>
+      </div>
+      <div class="diferencial reveal">
+        <div class="diferencial-icon">📦</div>
+        <h4>Embalagem Segura</h4>
+        <p>Potes lacrados que conservam o sabor e a temperatura por mais tempo.</p>
+      </div>
+      <div class="diferencial reveal">
+        <div class="diferencial-icon">❤️</div>
+        <h4>Receita de Família</h4>
+        <p>Tradição nordestina passada de geração em geração com muito carinho.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
   <footer>
-    <p>© 2026 Império do Cuscuz — Feito com amor no Nordeste</p>
+    <div class="logo-footer">Império do Cuscuz</div>
+    <p>O sabor do Nordeste na sua mesa todos os dias</p>
+    <a href="https://wa.me/55" class="whatsapp-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Fazer pedido pelo WhatsApp
+    </a>
+    <p class="footer-copy">© 2026 Império do Cuscuz · Todos os direitos reservados</p>
   </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 100);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 
 </body>
 </html>
